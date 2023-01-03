@@ -1,4 +1,4 @@
-FROM golang:1.19-bullseys AS builder
+FROM golang:1.19-bullseye AS builder
 
 ENV CGO_ENABLED=0
 ADD . /dist
