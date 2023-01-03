@@ -29,5 +29,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ github.actor }}/${{ github.repository }}:${{ env.GITHUB_SHA_SHORT }}
+          tags: ${{ github.repository }}:${{ env.GITHUB_SHA_SHORT }}
           labels: ${{ steps.meta.outputs.labels }}
