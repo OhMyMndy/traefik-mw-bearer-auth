@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -24,20 +25,28 @@ func validToken(token string) bool {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
-
+	
+	fmt.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
+	
+	status := http.StatusUnauthorized
+	
 	if len(authHeader) != 2 {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		status = http.StatusBadRequest
+	} else if validToken(authHeader[1]) {
+		status = http.StatusOK
 	}
-	if validToken(authHeader[1]) {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-	w.WriteHeader(http.StatusUnauthorized)
-
+	
+	fmt.Printf("%s %s %s %s\n", r.RemoteAddr, r.Method, r.URL, status)
+	
+	w.WriteHeader(status)
 }
+
 func main() {
+	httpPort := 8087
 	loadToken()
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8087", nil)
+	
+	fmt.Printf("listening on %v\n", httpPort)
+	
+	http.ListenAndServe(fmt.Sprintf(":%v", httpPort), nil)
 }
