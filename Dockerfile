@@ -1,4 +1,4 @@
-FROM golang:1.19-bullseye AS builder
+FROM golang:1.24.0-bookworm AS builder
 
 ENV CGO_ENABLED=0
 ADD . /dist
@@ -6,7 +6,7 @@ WORKDIR /dist
 RUN go get -v all
 RUN go build -o main .
 
-FROM ubuntu:22.04
+FROM alpine
 
 COPY --from=builder /dist/main /
 ENV LANG=C.UTF-8
